@@ -526,13 +526,13 @@ where
                 })?;
             }
             HintType::L2CelestiaInput => {
-                // Validate the hint data length (uint64 + 32)
-                if hint_data.len() != 96 {
+                // Validate the hint data length (8 + 32)
+                if hint_data.len() != 40 {
                     anyhow::bail!("Invalid hint data length: {}", hint_data.len());
                 }
 
-                let height = u64::from_be_bytes(hint_data[0..64].try_into().unwrap());
-                let commitment = Commitment(hint_data[64..96].try_into().unwrap());
+                let height = u64::from_be_bytes(hint_data[0..8].try_into().unwrap());
+                let commitment = Commitment(hint_data[8..40].try_into().unwrap());
 
                 let data = match self
                     .celestia_provider
