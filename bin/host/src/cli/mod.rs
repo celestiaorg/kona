@@ -59,6 +59,9 @@ pub struct HostCli {
     /// Connection to celestia network
     #[clap(long)]
     pub celestia_connection: String,
+    /// Token for the Celestia node connection
+    #[clap(long)]
+    pub auth_token: String,
     /// Celestia Namespace to fetch data from
     #[clap(long)]
     pub namespace: String,
