@@ -23,7 +23,7 @@ use op_alloy_protocol::BlockInfo;
 use reqwest::dns::Name;
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use tracing::trace;
+use tracing::{info, trace};
 
 mod precompiles;
 
@@ -532,7 +532,9 @@ where
                 }
 
                 let height = u64::from_be_bytes(hint_data[0..8].try_into().unwrap());
+                info!("Blob height {:?}", height);
                 let commitment = Commitment(hint_data[8..40].try_into().unwrap());
+                info!("Blob commitment {:?}", commitment);
 
                 let data = match self
                     .celestia_provider
@@ -541,7 +543,8 @@ where
                     .await
                 {
                     Ok(blob) => Bytes::from(blob.data),
-                    Err(e) => anyhow::bail!("celestia blob not found."),
+                    /// properly check the error to see what's wrong
+                    Err(e) => anyhow::bail!("celestia blob not found: {:#}", e),
                 };
 
                 let mut kv_write_lock = self.kv_store.write().await;
