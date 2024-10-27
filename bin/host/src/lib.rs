@@ -47,9 +47,8 @@ pub async fn start_server(cfg: HostCli) -> Result<()> {
 
     let kv_store = cfg.construct_kv_store();
 
-    let token = std::env::var("CELESTIA_NODE_AUTH_TOKEN").expect("Token not provided");
-
-    let celestia_rpc = Client::new(&cfg.celestia_connection, Some(&token))
+    info!("Celestia Auth Token: {:?}", cfg.auth_token);
+    let celestia_rpc = Client::new(&cfg.celestia_connection, Some(&cfg.auth_token))
         .await
         .expect("Failed creating rpc client");
 
