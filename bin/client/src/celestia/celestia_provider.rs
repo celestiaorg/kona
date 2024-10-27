@@ -7,7 +7,7 @@ use alloc::{boxed::Box, sync::Arc};
 use alloc::{vec, vec::Vec};
 use alloy_eips::BlockNumHash;
 use alloy_primitives::keccak256;
-use alloy_primitives::Bytes;
+use alloy_primitives::{hex, Bytes};
 use anyhow::{Error, Result};
 use async_trait::async_trait;
 use celestia_types::{nmt::Namespace, Commitment};
@@ -16,6 +16,7 @@ use kona_preimage::{CommsClient, PreimageKey, PreimageKeyType};
 use kona_preimage::{HintWriterClient, PreimageOracleClient};
 use op_alloy_genesis::SystemConfig;
 use op_alloy_protocol::BlockInfo;
+use tracing::info;
 
 /// An oracle-backed da storage.
 #[derive(Debug, Clone)]
@@ -37,7 +38,10 @@ impl<T: CommsClient + Clone> OracleCelestiaProvider<T> {
         commitment: Commitment,
     ) -> Result<Bytes, Error> {
         let mut encoded = Vec::new();
-        encoded.extend_from_slice(&height.to_be_bytes());
+        info!("blog_get height: {:?}", height);
+        info!("blog_get commitment: {:?}", hex::encode(commitment.0));
+        info!("blog_get namespace: {:?}", hex::encode(_namespace.0));
+        encoded.extend_from_slice(&height.to_le_bytes());
         encoded.extend_from_slice(&commitment.0);
 
         // send a hint for altda commitment

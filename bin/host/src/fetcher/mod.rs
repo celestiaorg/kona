@@ -4,6 +4,7 @@
 use crate::{kv::KeyValueStore, util};
 use alloy_consensus::{Header, TxEnvelope, EMPTY_ROOT_HASH};
 use alloy_eips::{eip2718::Encodable2718, eip4844::FIELD_ELEMENTS_PER_BLOB, BlockId};
+use alloy_primitives::hex;
 use alloy_primitives::{address, keccak256, Address, Bytes, B256};
 use alloy_provider::{Provider, ReqwestProvider};
 use alloy_rlp::{Decodable, EMPTY_STRING_CODE};
@@ -531,10 +532,12 @@ where
                     anyhow::bail!("Invalid hint data length: {}", hint_data.len());
                 }
 
-                let height = u64::from_be_bytes(hint_data[0..8].try_into().unwrap());
+                info!("hint data: {:?}", hint_data);
+
+                let height = u64::from_le_bytes(hint_data[0..8].try_into().unwrap());
                 info!("Blob height {:?}", height);
                 let commitment = Commitment(hint_data[8..40].try_into().unwrap());
-                info!("Blob commitment {:?}", commitment);
+                info!("Blob commitment {:?}", hex::encode(commitment.0));
 
                 let data = match self
                     .celestia_provider
