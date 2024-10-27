@@ -89,7 +89,7 @@ impl<CP: ChainProvider + Send, CE: CelestiaProvider + Send> CalldataSource<CP, C
             let result = match data[0] {
                 0xce => {
                     let height_bytes = &data[1..9];
-                    let height = u64::from_be_bytes(height_bytes.try_into().unwrap());
+                    let height = u64::from_le_bytes(height_bytes.try_into().unwrap());
                     let commitment = Commitment(data[9..41].try_into().unwrap());
 
                     match self.celestia.blob_get(height, self.namespace, commitment).await {

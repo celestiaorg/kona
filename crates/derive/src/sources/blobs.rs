@@ -107,7 +107,7 @@ where
             if tx.tx_type() != TxType::Eip4844 {
                 let tx_data = if calldata[0] == 0xce {
                     let height_bytes = &calldata[1..9];
-                    let height = u64::from_be_bytes(height_bytes.try_into().unwrap());
+                    let height = u64::from_le_bytes(height_bytes.try_into().unwrap());
                     let commitment = Commitment(calldata[9..41].try_into().unwrap());
 
                     // Create a static future that's Send
