@@ -105,8 +105,9 @@ where
             self.prefetch(hint).await?;
 
             let kv_lock = self.kv_store.read().await;
+            info!("Getting Preimage from kv store after prefetch");
             preimage = kv_lock.get(key);
-
+            info!("Got Preimage after prefetch: {:?}", preimage);
             retries += 1;
         }
 
