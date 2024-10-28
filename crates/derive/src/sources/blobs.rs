@@ -12,7 +12,7 @@ use celestia_types::{nmt::Namespace, Commitment};
 use kona_primitives::{BlobData, IndexedBlobHash};
 use kona_providers::ChainProvider;
 use op_alloy_protocol::BlockInfo;
-use tracing::warn;
+use tracing::{info, warn};
 
 /// A data iterator that reads from a blob.
 #[derive(Debug, Clone)]
@@ -110,15 +110,20 @@ where
                     let height = u64::from_le_bytes(height_bytes.try_into().unwrap());
                     let commitment = Commitment(calldata[9..41].try_into().unwrap());
 
-                    // Create a static future that's Send
                     match self.celestia.blob_get(height, self.namespace, commitment).await {
-                        Ok(blob) => blob,
+                        Ok(blob) => {
+                            info!("Got blob from Celestia: {:?}", blob);
+                            blob
+                        }
                         Err(_) => continue,
                     }
                 } else {
+                    info!("Using calldata instead of Celestia");
                     Bytes::from(calldata.to_vec())
                 };
+                info!("turning tx_data into blob_data");
                 let blob_data = BlobData { data: None, calldata: Some(tx_data.to_vec().into()) };
+                info!("Pushing data to the [data] vector");
                 data.push(blob_data);
                 continue;
             }

@@ -114,9 +114,6 @@ impl PreimageOracleServer for OracleServer {
         // Fetch the preimage value from the preimage getter.
         let value = fetcher.get_preimage(preimage_key).await?;
 
-        info!("Got value from prefetcher: {:?}", value);
-        info!("Value length: {:?}", value.len());
-        info!("Value length as u64: {:?}", value.len() as u64);
         // Write the length as a big-endian u64 followed by the data.
         let data = [(value.len() as u64).to_be_bytes().as_ref(), value.as_ref()]
             .into_iter()
