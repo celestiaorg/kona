@@ -47,11 +47,11 @@ impl<T: CommsClient + Clone> OracleCelestiaProvider<T> {
         // send a hint for altda commitment
         self.oracle.write(&HintType::L2CelestiaInput.encode_with(&[encoded.as_ref()])).await?;
         info!("finished writting data into oracle for blob_get");
-        let data = &mut vec![];
         // fetch the data behind the keccak256(height, commitment) key
         info!("Fetching data from oracle for blob_get");
-        self.oracle
-            .get_exact(PreimageKey::new(*keccak256(encoded), PreimageKeyType::GlobalGeneric), data)
+        let data = self
+            .oracle
+            .get(PreimageKey::new(*keccak256(encoded), PreimageKeyType::GlobalGeneric))
             .await?;
 
         info!("Retrieved celestia data {:?} from the oracle.", commitment);
