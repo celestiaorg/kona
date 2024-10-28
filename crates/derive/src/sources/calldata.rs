@@ -91,7 +91,7 @@ impl<CP: ChainProvider + Send, CE: CelestiaProvider + Send> CalldataSource<CP, C
                 0xce => {
                     let height_bytes = &data[1..9];
                     let height = u64::from_le_bytes(height_bytes.try_into().unwrap());
-                    let commitment = Commitment(data[9..41].try_into().unwrap());
+                    let commitment = Commitment(data[9..42].try_into().unwrap());
 
                     match self.celestia.blob_get(height, self.namespace, commitment).await {
                         Ok(blob) => {
@@ -103,10 +103,11 @@ impl<CP: ChainProvider + Send, CE: CelestiaProvider + Send> CalldataSource<CP, C
                 }
                 _ => Bytes::from(data.to_vec()),
             };
-
+            info!("Pusing result for calldata batch");
             results.push_back(result);
         }
 
+        info!("Assigning results to calldata");
         self.calldata = results;
         self.open = true;
 
