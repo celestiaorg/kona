@@ -43,7 +43,6 @@ serde_json.workspace = true
 
 # `tracing-subscriber` feature dependencies
 tracing-subscriber = { workspace = true, optional = true }
-celestia-rpc = "0.6.0"
 celestia-types = "0.6.1"
 dotenvy = { version = "0.15", default-features = false }
 

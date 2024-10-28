@@ -12,7 +12,6 @@ homepage.workspace = true
 workspace = true
 
 [dependencies]
-celestia-rpc = "0.6.0"
 
 # Alloy
 alloy-eips.workspace = true
