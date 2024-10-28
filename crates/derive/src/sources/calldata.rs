@@ -12,6 +12,7 @@ use celestia_rpc::{BlobClient, Client};
 use celestia_types::{nmt::Namespace, Blob, Commitment};
 use kona_providers::ChainProvider;
 use op_alloy_protocol::BlockInfo;
+use tracing::info;
 
 /// A data iterator that reads from calldata.
 #[derive(Debug, Clone)]
