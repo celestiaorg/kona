@@ -8,7 +8,6 @@ use alloc::{boxed::Box, collections::VecDeque, format, string::String, sync::Arc
 use alloy_consensus::{Transaction, TxEnvelope};
 use alloy_primitives::{Address, Bytes, TxKind};
 use async_trait::async_trait;
-use celestia_rpc::{BlobClient, Client};
 use celestia_types::{nmt::Namespace, Blob, Commitment};
 use kona_providers::ChainProvider;
 use op_alloy_protocol::BlockInfo;
