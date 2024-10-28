@@ -531,12 +531,9 @@ where
                     anyhow::bail!("Invalid hint data length: {}", hint_data.len());
                 }
 
-                info!("hint data: {:?}", hint_data);
-
                 let height = u64::from_le_bytes(hint_data[0..8].try_into().unwrap());
-                info!("Blob height {:?}", height);
+
                 let commitment = Commitment(hint_data[8..40].try_into().unwrap());
-                info!("Blob commitment {:?}", hex::encode(commitment.0));
 
                 let data = match self
                     .celestia_provider
@@ -548,24 +545,18 @@ where
                     Err(e) => anyhow::bail!("celestia blob not found: {:#}", e),
                 };
 
-                info!("Fetched data from celestia light node: {:?}", data);
-
                 let mut kv_write_lock = self.kv_store.write().await;
-                info!("Acquired lock on kv store");
+
                 // Note: ommitting the sender contract, since this implementation is meant to be used for zk rollups
                 // which have other ways of veryfying this commitment
                 let celestia_commitment_hash = keccak256(&hint_data);
-                info!("Celestia commitment hash: {:?}", celestia_commitment_hash);
+
                 // store the preimage to the altda commitment using the GlobalGeneric key
                 kv_write_lock.set(
                     PreimageKey::new(*celestia_commitment_hash, PreimageKeyType::GlobalGeneric)
                         .into(),
                     data.into(),
                 )?;
-                info!(
-                    "Finished writting data into kv_store with hash: {:?}",
-                    celestia_commitment_hash
-                );
             }
         }
 

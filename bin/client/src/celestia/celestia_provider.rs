@@ -38,23 +38,18 @@ impl<T: CommsClient + Clone> OracleCelestiaProvider<T> {
         commitment: Commitment,
     ) -> Result<Bytes, Error> {
         let mut encoded = Vec::new();
-        info!("blog_get height: {:?}", height);
-        info!("blog_get commitment: {:?}", hex::encode(commitment.0));
-        info!("blog_get namespace: {:?}", hex::encode(_namespace.0));
         encoded.extend_from_slice(&height.to_le_bytes());
         encoded.extend_from_slice(&commitment.0);
 
         // send a hint for altda commitment
         self.oracle.write(&HintType::L2CelestiaInput.encode_with(&[encoded.as_ref()])).await?;
-        info!("finished writting data into oracle for blob_get");
+
         // fetch the data behind the keccak256(height, commitment) key
-        info!("Fetching data from oracle for blob_get");
         let data = self
             .oracle
             .get(PreimageKey::new(*keccak256(encoded), PreimageKeyType::GlobalGeneric))
             .await?;
 
-        info!("Retrieved celestia data {:?} from the oracle.", commitment);
         Ok(Bytes::copy_from_slice(data.as_ref()))
     }
 }
