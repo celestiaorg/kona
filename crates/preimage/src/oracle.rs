@@ -4,7 +4,7 @@ use crate::{
     PipeHandle, PreimageKey, PreimageOracleClient, PreimageOracleServer,
 };
 use alloc::{boxed::Box, vec::Vec};
-use tracing::trace;
+use tracing::{info, trace};
 
 /// An [OracleReader] is a high-level interface to the preimage oracle.
 #[derive(Debug, Clone, Copy)]
@@ -114,6 +114,9 @@ impl PreimageOracleServer for OracleServer {
         // Fetch the preimage value from the preimage getter.
         let value = fetcher.get_preimage(preimage_key).await?;
 
+        info!("Got value from prefetcher: {:?}", value);
+        info!("Value length: {:?}", value.len());
+        info!("Value length as u64: {:?}", value.len() as u64);
         // Write the length as a big-endian u64 followed by the data.
         let data = [(value.len() as u64).to_be_bytes().as_ref(), value.as_ref()]
             .into_iter()
@@ -121,6 +124,8 @@ impl PreimageOracleServer for OracleServer {
             .copied()
             .collect::<Vec<_>>();
         self.pipe_handle.write(data.as_slice()).await?;
+
+        info!("Wrote preimage data for key {preimage_key}");
 
         trace!(target: "oracle_server", "Successfully wrote preimage data for key {preimage_key}");
 
