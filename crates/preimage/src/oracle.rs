@@ -122,8 +122,6 @@ impl PreimageOracleServer for OracleServer {
             .collect::<Vec<_>>();
         self.pipe_handle.write(data.as_slice()).await?;
 
-        info!("Wrote preimage data for key {preimage_key}");
-
         trace!(target: "oracle_server", "Successfully wrote preimage data for key {preimage_key}");
 
         Ok(())

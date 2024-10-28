@@ -93,7 +93,10 @@ impl<CP: ChainProvider + Send, CE: CelestiaProvider + Send> CalldataSource<CP, C
                     let commitment = Commitment(data[9..41].try_into().unwrap());
 
                     match self.celestia.blob_get(height, self.namespace, commitment).await {
-                        Ok(blob) => blob,
+                        Ok(blob) => {
+                            info!("Got blob from Celestia: {:?}", blob);
+                            blob
+                        }
                         Err(_) => continue,
                     }
                 }
