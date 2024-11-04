@@ -30,7 +30,7 @@ impl<T: CommsClient + Clone> OracleCelestiaProvider<T> {
         Self { oracle }
     }
 
-    /// Retrieves data from an altDA commitment
+    /// Retrieves data from an celestia commitment
     async fn blob_get(
         &self,
         height: u64,
@@ -41,7 +41,7 @@ impl<T: CommsClient + Clone> OracleCelestiaProvider<T> {
         encoded.extend_from_slice(&height.to_le_bytes());
         encoded.extend_from_slice(&commitment.0);
 
-        // send a hint for altda commitment
+        // send a hint for celestia commitment
         self.oracle.write(&HintType::L2CelestiaInput.encode_with(&[encoded.as_ref()])).await?;
 
         // fetch the data behind the keccak256(height, commitment) key

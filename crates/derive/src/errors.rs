@@ -92,12 +92,6 @@ pub enum PipelineError {
     /// Provider error variant.
     #[error("Blob provider error: {0}")]
     Provider(String),
-    /// AltDA error variant
-    #[error("Failed to advance altDA L1 origin: {0}")]
-    AltDaAdvanceFailed(String),
-    /// Data could not be found for a commitment
-    #[error("failed to fetch data for commitment: {0}")]
-    CommitmentDataEmpty(String),
 }
 
 impl PipelineError {

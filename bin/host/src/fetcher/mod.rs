@@ -40,7 +40,7 @@ where
     l1_provider: ReqwestProvider,
     /// The blob provider
     blob_provider: OnlineBlobProvider<OnlineBeaconClient>,
-    /// The altDA provider
+    /// The celestia provider
     celestia_provider: CelestiaClient,
     /// L2 chain provider.
     l2_provider: ReqwestProvider,
@@ -551,7 +551,7 @@ where
                 // which have other ways of veryfying this commitment
                 let celestia_commitment_hash = keccak256(&hint_data);
 
-                // store the preimage to the altda commitment using the GlobalGeneric key
+                // store the preimage to the celestia commitment using the GlobalGeneric key
                 kv_write_lock.set(
                     PreimageKey::new(*celestia_commitment_hash, PreimageKeyType::GlobalGeneric)
                         .into(),
